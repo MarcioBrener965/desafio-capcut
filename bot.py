@@ -30,33 +30,20 @@ pasta_origem = r"C:\Users\noturno\Documents\videos"
 pasta_destino = r"C:\Users\noturno\Documents\videos\videos_usados"
 
 
-def main():
-    maestro = BotMaestroSDK.from_sys_args()
-    execution = maestro.get_execution()
-
-    print(f"Task ID is: {execution.task_id}")
-    print(f"Task Parameters are: {execution.parameters}")
-
-    bot = DesktopBot()
-    app_path = r"C:/Users/noturno/AppData/Local/CapCut/Apps/CapCut.exe"
-    bot.execute(app_path)
-
-    # mudei ele para maxmizar a tela dia 21/08/2024
-    bot.maximize_window()
-
-    if not bot.find( "add_projeto", matching=0.97, waiting_time=10000):
+def importar_video(bot):
+    if not bot.find("add_projeto", matching=0.97, waiting_time=10000):
         not_found("add_projeto")
     bot.click()
 
     bot.sleep(3000)
 
-    if bot.find( "cancelar_capcut_pro", matching=0.97, waiting_time=10000):
+    if bot.find("cancelar_capcut_pro", matching=0.97, waiting_time=10000):
         bot.click_relative(499, 21)
 
-    if bot.find( "btn_importar", matching=0.97, waiting_time=10000):
+    if bot.find("btn_importar", matching=0.97, waiting_time=10000):
         bot.click()
 
-    if not bot.find( "caminho_pasta", matching=0.97, waiting_time=10000):
+    if not bot.find("caminho_pasta", matching=0.97, waiting_time=10000):
         not_found("caminho_pasta")
     bot.click()
     bot.control_a()
@@ -64,60 +51,49 @@ def main():
     bot.kb_type("C:/Users/noturno/Documents/videos")
     bot.enter()
 
-    bot.sleep(3000)
 
-    if not bot.find( "selecionar_video", matching=0.97, waiting_time=10000):
+def selecionar_video(bot):
+    if not bot.find("selecionar_video", matching=0.97, waiting_time=10000):
         not_found("selecionar_video")
     bot.click()
 
     bot.sleep(2000)
 
-    if not bot.find( "abrir", matching=0.97, waiting_time=10000):
+    if not bot.find("abrir", matching=0.97, waiting_time=10000):
         not_found("abrir")
     bot.click()
 
-    bot.sleep(3000)
+    # chamar notificação
+    noticacao(bot, "Upload de vídeo concluído")
 
     bot.mouse_move(375, 382)
 
-    if bot.find( "add_timeline", matching=0.97, waiting_time=10000):
+    if bot.find("add_timeline", matching=0.97, waiting_time=10000):
         print("Foi adicionado a timeline")
         bot.click()
 
-    # Código para gerar legenda
-    """
-    if not bot.find( "legendas", matching=0.97, waiting_time=10000):
+
+def gerar_legenda(bot):
+    if not bot.find("legendas", matching=0.97, waiting_time=10000):
         not_found("legendas")
     bot.click()
 
-    if not bot.find( "gerar_legenda", matching=0.97, waiting_time=10000):
-       not_found("gerar_legenda")
+    if not bot.find("gerar_legenda", matching=0.97, waiting_time=10000):
+        not_found("gerar_legenda")
     bot.click()
     bot.sleep(15000)
-    
-    if not bot.find( "exportar", matching=0.97, waiting_time=10000):
-         not_found("exportar")
+
+    if not bot.find("exportar", matching=0.97, waiting_time=10000):
+        not_found("exportar")
     bot.click()
-    
-    if not bot.find( "gratis", matching=0.97, waiting_time=10000):
+
+    if not bot.find("gratis", matching=0.97, waiting_time=10000):
         not_found("gratis")
     bot.click()
-    
-    
-    """
-    # if not bot.find( "exportar", matching=0.97, waiting_time=10000):
-    #     not_found("exportar")
-    # bot.click()
-    # bot.click_at(x=2313,y=28)
 
-    if bot.find( "exportar", matching=0.97, waiting_time=10000):
-        print("Clicou no exportar")
-        bot.click()
 
-    bot.wait(5000)
-
-    # Esse trecho de código deve alterar o nome do vídeo
-    if not bot.find( "nome_video", matching=0.97, waiting_time=10000):
+def gerar_nome(bot):
+    if not bot.find("nome_video", matching=0.97, waiting_time=10000):
         not_found("nome_video")
     bot.click_relative(167, 11)
     bot.control_a()
@@ -130,24 +106,51 @@ def main():
     # exportar o arquivo
     bot.enter()
 
-    # fechar o capcut
+
+def fechar_capcut(bot):
     bot.alt_f4()
     bot.alt_f4()
     bot.sleep(2000)
     bot.alt_f4()
     bot.sleep(3000)
-   
-    
+
+
+def main():
+    maestro = BotMaestroSDK.from_sys_args()
+    execution = maestro.get_execution()
+
+    print(f"Task ID is: {execution.task_id}")
+    print(f"Task Parameters are: {execution.parameters}")
+
+    bot = DesktopBot()
+    app_path = r"C:/Users/noturno/AppData/Local/CapCut/Apps/CapCut.exe"
+    bot.execute(app_path)
+    bot.maximize_window()
+
+    importar_video(bot)
+
+    bot.sleep(3000)
+
+    selecionar_video(bot)
+
+    bot.sleep(3000)
+
+    # gerar_legenda(bot)
+
+    if bot.find("exportar", matching=0.97, waiting_time=10000):
+        print("Clicou no exportar")
+        bot.click()
+
+    bot.wait(5000)
+
+    gerar_nome(bot)
+
+    fechar_capcut(bot)
 
     mover_primeiro_arquivo_mp4(pasta_origem, pasta_destino)
 
     bot.wait(3000)
 
-    """
-    if not bot.find( "botao_cancelar", matching=0.97, waiting_time=10000):
-        not_found("botao_cancelar")
-    bot.click()
-    """
     bot.execute(r'C:\Users\noturno\Documents\videos')
 
     """
